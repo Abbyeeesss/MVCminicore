@@ -1,70 +1,88 @@
-# Getting Started with Create React App
+# Mini-core
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicación web para filtrar ventas por rango de fechas, calcular el total vendido, **aplicar reglas de comisión** y mostrar el **nombre del vendedor**, usando React en el frontend y Supabase como backend.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Requisitos
 
-### `npm start`
+- [Node.js](https://nodejs.org/) (LTS recomendado)
+- Cuenta y proyecto en [Supabase](https://supabase.com/)
+- Tablas y políticas configuradas como se indica más abajo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 1. Clonar e instalar dependencias
 
-### `npm test`
+```bash
+cd minicore
+npm install
+```
+### 2. Base de datos en Supabase
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+El proyecto asume tablas en el esquema `public` con nombres exactos:
 
-### `npm run build`
+| Tabla | Uso |
+|-------|-----|
+| **Vendedor** | `id`, `nombre` |
+| **Ventas** | `id`, `created_at`, `vendedor_id`, `fecha` (tipo `date`), `monto` |
+| **Reglas** | `id`, `created_at`, `amount`, `rule` |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3. Arrancar en desarrollo
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Se abre [http://localhost:3000](http://localhost:3000).
 
-### `npm run eject`
+### 3. Compilar para producción
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Genera la carpeta `build/` lista para servir en cualquier hosting estático o en [Vercel](https://vercel.com/), [Netlify](https://www.netlify.com/), etc.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Uso de la aplicación
 
-## Learn More
+1. Elige fecha inicio y **fecha fin
+2. Pulsa Filtrar
+3. Verás total de ventas (suma de `monto`), **total de comisión** y una tabla con fecha, nombre del vendedor, monto y comisión por fila.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Estructura del código 
 
-### Code Splitting
+```
+src/
+  App.js                 # Pantalla: filtros, totales, tabla
+  App.css
+  supabaseClient.js      # Cliente Supabase
+  config/tablaNombres.js # Nombres de tablas y opciones
+  ventas/
+    filtrarVentas.js     # Consulta filtrada por fechas
+    totalVentas.js       # Suma de montos
+  vendedores/
+    cargarVendedores.js  # Lista vendedores y mapa id → nombre
+  reglas/
+    cargarReglas.js      # Lista reglas
+    comision.js          # Cálculo de comisión por venta y total
+sql/
+  politica_lectura_*.sql # Ejemplos de políticas RLS para anon
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Créditos
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Repositorio: [github.com/Anahi606/Minicore](https://github.com/Anahi606/Minicore.git)
+- Video: [YouTube](https://www.youtube.com/watch?v=oqVrl95alBQ)
 
-### Making a Progressive Web App
+## Documentación
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [React](https://react.dev/)
+- [Create React App](https://create-react-app.dev/)
+- [Supabase](https://supabase.com/docs)
