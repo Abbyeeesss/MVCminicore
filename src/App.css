@@ -1,1 +1,30 @@
+.form-filtro label {
+  display: inline-block;
+  margin-right: 1.25rem;
+  margin-bottom: 0.5rem;
+}
 
+.resumen p {
+  margin: 0.35rem 0;
+}
+
+.tabla-ventas {
+  border-collapse: separate;
+  border-spacing: 0 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.tabla-ventas th,
+.tabla-ventas td {
+  padding: 0.45rem 1.1rem;
+  vertical-align: top;
+}
+
+.tabla-ventas th {
+  padding-bottom: 0.55rem;
+}
+
+.tabla-ventas th:not(:first-child),
+.tabla-ventas td:not(:first-child) {
+  padding-left: 1.75rem;
+}

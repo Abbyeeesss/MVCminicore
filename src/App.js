@@ -67,6 +67,7 @@ function App() {
     <div>
       <h1>Mini-core</h1>
       <form
+        className="form-filtro"
         onSubmit={(e) => {
           e.preventDefault();
           aplicarFiltro();
@@ -95,10 +96,12 @@ function App() {
         </button>
       </form>
 
-      <p>Total ventas: {totalVentas}</p>
-      <p>Total comisión: {totalComision}</p>
+      <div className="resumen">
+        <p>Total ventas: {totalVentas}</p>
+        <p>Total comisión: {totalComision}</p>
+      </div>
 
-      <table>
+      <table className="tabla-ventas">
         <thead>
           <tr>
             <th>fecha</th>
