@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
+import { totalComisionVentas, comisionPorVenta } from './reglas/comision';
+import { cargarReglas } from './reglas/cargarReglas';
+import { cargarVendedores, mapaNombrePorVendedorId } from './vendedores/cargarVendedores';
 import { filtrarVentas } from './ventas/filtrarVentas';
 import { totalMontoVentas } from './ventas/totalVentas';
 
@@ -20,6 +23,21 @@ function App() {
   const [fechaFin, setFechaFin] = useState(formatDateInput(finAno));
   const [ventas, setVentas] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [reglas, setReglas] = useState([]);
+  const [vendedorNombrePorId, setVendedorNombrePorId] = useState({});
+
+  useEffect(() => {
+    let cancel = false;
+    (async () => {
+      const [vr, rr] = await Promise.all([cargarVendedores(), cargarReglas()]);
+      if (cancel) return;
+      if (!vr.error && vr.data) setVendedorNombrePorId(mapaNombrePorVendedorId(vr.data));
+      if (!rr.error && rr.data) setReglas(rr.data);
+    })();
+    return () => {
+      cancel = true;
+    };
+  }, []);
 
   const aplicarFiltro = useCallback(async () => {
     setLoading(true);
@@ -40,6 +58,10 @@ function App() {
   }, [aplicarFiltro]);
 
   const totalVentas = useMemo(() => totalMontoVentas(ventas), [ventas]);
+  const totalComision = useMemo(
+    () => totalComisionVentas(ventas, reglas),
+    [ventas, reglas]
+  );
 
   return (
     <div>
@@ -74,21 +96,29 @@ function App() {
       </form>
 
       <p>Total ventas: {totalVentas}</p>
+      <p>Total comisión: {totalComision}</p>
 
       <table>
         <thead>
           <tr>
             <th>fecha</th>
-            <th>vendedor_id</th>
+            <th>vendedor</th>
             <th>monto</th>
+            <th>comisión</th>
           </tr>
         </thead>
         <tbody>
           {ventas.map((v) => (
             <tr key={v.id}>
               <td>{String(v.fecha)}</td>
-              <td>{String(v.vendedor_id)}</td>
+              <td>
+                {vendedorNombrePorId[v.vendedor_id] != null &&
+                vendedorNombrePorId[v.vendedor_id] !== ''
+                  ? vendedorNombrePorId[v.vendedor_id]
+                  : String(v.vendedor_id)}
+              </td>
               <td>{String(v.monto)}</td>
+              <td>{comisionPorVenta(v.monto, reglas)}</td>
             </tr>
           ))}
         </tbody>
