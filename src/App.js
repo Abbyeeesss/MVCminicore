@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import { filtrarVentas } from './ventas/filtrarVentas';
+import { totalMontoVentas } from './ventas/totalVentas';
 
 function formatDateInput(d) {
   const y = d.getFullYear();
@@ -38,6 +39,8 @@ function App() {
     aplicarFiltro();
   }, [aplicarFiltro]);
 
+  const totalVentas = useMemo(() => totalMontoVentas(ventas), [ventas]);
+
   return (
     <div>
       <h1>Mini-core</h1>
@@ -69,6 +72,8 @@ function App() {
           Filtrar
         </button>
       </form>
+
+      <p>Total ventas: {totalVentas}</p>
 
       <table>
         <thead>
